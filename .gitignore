@@ -1,0 +1,4 @@
+config/terraform/.terraform
+/config/terraform/.terraform/
+/config/terraform/terraform.tfstate
+/config/terraform/terraform.tfstate.backup
