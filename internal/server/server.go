@@ -64,6 +64,40 @@ func (s *Server) CreatePackage(request *polvo_v1.CreatePackageRequest, stream po
 	return nil
 }
 
+func (s *Server) GetPackageEntryPoint(ctx context.Context, request *polvo_v1.GetPackageEntryPointRequest) (*polvo_v1.GetPackageEntryPointResponse, error) {
+
+	versionsRef, err := s.repo.ListVersions(ctx, request.GetPackageOrn())
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to list version")
+	}
+
+	for {
+		snapshot, err := versionsRef.Next()
+		if err == iterator.Done {
+			break
+		}
+
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to get nex")
+		}
+
+		var foundVersion polvo_v1.Version
+		if err := snapshot.DataTo(&foundVersion); err != nil {
+			return nil, errors.Wrap(err, "failed to decode data")
+		}
+
+		foundVersion.Orn = v1.ServiceDomain + "/" + strings.Join(strings.Split(snapshot.Ref.Path, "/")[5:], "/")
+
+		if strings.HasSuffix(foundVersion.Orn, "/latest") {
+			return &polvo_v1.GetPackageEntryPointResponse{
+				EntryPointUrl: foundVersion.GetEntryPointUrl(),
+			}, nil
+		}
+	}
+
+	return nil, status.Error(codes.NotFound, "no version found")
+}
+
 func (s *Server) UpdatePackage(ctx context.Context, request *polvo_v1.UpdatePackageRequest) (*polvo_v1.UpdatePackageResponse, error) {
 
 	request.GetUpdateMask().Normalize()
@@ -147,6 +181,12 @@ func (s *Server) ListPackages(request *polvo_v1.ListPackagesRequest, streamServe
 
 func (s *Server) CreateVersion(ctx context.Context, request *polvo_v1.CreateVersionRequest) (*polvo_v1.CreateVersionResponse, error) {
 
+	packageOrn := strings.Split(request.GetVersion().GetOrn(), "/versions/")[0]
+
+	if _, err := s.repo.GetPackage(ctx, packageOrn); err != nil {
+		return nil, errors.Wrap(err, "failed to get package")
+	}
+
 	if err := s.repo.SetResource(ctx, request.GetVersion().GetOrn(), request.GetVersion()); err != nil {
 		return nil, errors.Wrap(err, "failed to get version")
 	}
@@ -202,6 +242,12 @@ func (s *Server) DeletePackage(request *polvo_v1.DeletePackageRequest, streamSer
 }
 
 func (s *Server) UpdateVersion(ctx context.Context, request *polvo_v1.UpdateVersionRequest) (*polvo_v1.UpdateVersionResponse, error) {
+
+	packageOrn := strings.Split(request.GetVersion().GetOrn(), "/versions/")[0]
+
+	if _, err := s.repo.GetPackage(ctx, packageOrn); err != nil {
+		return nil, errors.Wrap(err, "failed to get package")
+	}
 
 	request.GetUpdateMask().Normalize()
 	if !request.GetUpdateMask().IsValid(request) {

@@ -17,6 +17,6 @@ require (
 	google.golang.org/grpc v1.37.0
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
-	pkg.aiocean.dev/polvogo v1.0.9
+	pkg.aiocean.dev/polvogo v1.0.12
 	pkg.aiocean.dev/serviceutil v1.0.1
 )
