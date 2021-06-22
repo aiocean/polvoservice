@@ -33,6 +33,12 @@ variable "image_digest" {
   description = "The image digest"
 }
 
+variable "dns_managed_zone" {
+  type        = string
+  default     = "aiocean-services"
+  description = "The managed zone to create domain"
+}
+
 locals {
   service_domain    = "${var.service_id}.${var.service_base_domain}"
   service_full_name = "${var.service_id}-service"
