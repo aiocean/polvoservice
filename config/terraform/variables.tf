@@ -33,7 +33,7 @@ variable "image_digest" {
   description = "The image digest"
 }
 
-variable "dns_managed_zone" {
+variable "managed_dns_zone" {
   type        = string
   default     = "aiocean-services"
   description = "The managed zone to create domain"
