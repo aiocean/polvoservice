@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"os"
 
 	"github.com/dgraph-io/dgo/v210"
 	"github.com/dgraph-io/dgo/v210/protos/api"
@@ -29,7 +30,7 @@ type DgraphRepository struct {
 
 func (r *DgraphRepository) getDgraphClient () (*dgo.Dgraph, error) {
 	if r.dgraphClient == nil {
-		d, err := grpc.Dial("165.22.105.129:9080", grpc.WithInsecure())
+		d, err := grpc.Dial(os.Getenv("DGRAPH_ADDRESS"), grpc.WithInsecure())
 		if err != nil {
 			return nil, err
 		}
