@@ -14,7 +14,7 @@ import (
 
 func InitializeHandler(ctx context.Context) (*handler.Handler, error) {
 	wire.Build(
-		repository.FirestoreWireSet,
+		repository.DgraphWireSet,
 		wireset.Default,
 		server.WireSet,
 	)

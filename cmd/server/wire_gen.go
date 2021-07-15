@@ -7,7 +7,6 @@ package main
 
 import (
 	"context"
-
 	"pkg.aiocean.dev/polvoservice/internal/repository"
 	"pkg.aiocean.dev/polvoservice/internal/server"
 	"pkg.aiocean.dev/serviceutil/handler"
@@ -23,11 +22,11 @@ func InitializeHandler(ctx context.Context) (*handler.Handler, error) {
 	if err != nil {
 		return nil, err
 	}
-	firestoreRepository, err := repository.NewFirestoreRepository()
+	dgraphRepository, err := repository.NewDgraphRepository()
 	if err != nil {
 		return nil, err
 	}
-	serverServer := server.NewServer(zapLogger, firestoreRepository)
+	serverServer := server.NewServer(zapLogger, dgraphRepository)
 	streamServerInterceptor := interceptor.NewStreamServerInterceptor(zapLogger)
 	unaryServerInterceptor := interceptor.NewUnaryServerInterceptor(zapLogger)
 	healthserverServer := healthserver.NewHealthServer()
