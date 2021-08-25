@@ -1,0 +1,24 @@
+steps:
+  - id: 'image:build'
+    name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/getpolvo:$SHORT_SHA', '.' ]
+  - id: 'image:push'
+    name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', 'gcr.io/$PROJECT_ID/getpolvo:$SHORT_SHA']
+  - id: 'terraform:init'
+    name: 'hashicorp/terraform:1.0.5'
+    entrypoint: 'sh'
+    args:
+    - '-c'
+    - |
+      cd infrastructure/terraform
+      terraform init -var="docker_image_url=gcr.io/$PROJECT_ID/getpolvo:$SHORT_SHA" -reconfigure -backend-config="bucket=$PROJECT_ID-tfstate" -backend-config="prefix=getpolvo/$_ENV"
+  # plan
+  - id: 'terraform:apply'
+    name: 'hashicorp/terraform:1.0.5'
+    entrypoint: 'sh'
+    args:
+    - '-c'
+    - |
+      cd infrastructure/terraform
+      terraform apply -auto-approve -var="docker_image_url=gcr.io/$PROJECT_ID/getpolvo:$SHORT_SHA"

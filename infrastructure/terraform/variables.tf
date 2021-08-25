@@ -6,13 +6,13 @@ variable "service_id" {
 
 variable "service_base_domain" {
   type        = string
-  default     = "aiocean.services"
+  default     = "truepro.fit"
   description = "Base do main for the service. It should be already exists"
 }
 
 variable "project_id" {
   type        = string
-  default     = "aio-shopify-services"
+  default     = "trueprofit-frontend"
   description = "The project name"
 }
 
@@ -28,19 +28,19 @@ variable "region" {
   description = "The region"
 }
 
-variable "image_digest" {
+variable "docker_image_url" {
   type        = string
   description = "The image digest"
 }
 
+
 variable "managed_dns_zone" {
   type        = string
-  default     = "aiocean-services"
+  default     = "trueprofit"
   description = "The managed zone to create domain"
 }
 
 locals {
   service_domain    = "${var.service_id}.${var.service_base_domain}"
   service_full_name = "${var.service_id}-service"
-  docker_image_url = "gcr.io/${var.project_id}/${local.service_full_name}@${var.image_digest}"
 }

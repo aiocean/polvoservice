@@ -17,35 +17,22 @@ resource "google_cloud_run_service" "default" {
     metadata {
       annotations = {
         "autoscaling.knative.dev/maxScale" = "100"
-        "client.knative.dev/user-image"    = local.docker_image_url
+        "client.knative.dev/user-image"    = var.docker_image_url
         "run.googleapis.com/client-name"   = "terraform"
       }
     }
     spec {
       container_concurrency = 80
       containers {
-        image = local.docker_image_url
+        image = var.docker_image_url
         ports {
           container_port = 8080
           name           = "h2c"
         }
         env {
-          name  = "ENVIRONMENT"
-          value = var.env
+          name = "DGRAPH_ADDRESS"
+          value = "165.22.105.129:9080"
         }
-        env {
-          name  = "SERVICE_BASE_DOMAIN"
-          value = var.service_base_domain
-        }
-        env {
-          name  = "SERVICE_NAME"
-          value = var.service_id
-        }
-        env {
-          name  = "GOOGLE_SERVICE_ACCOUNT"
-          value = google_service_account.firebase_account.id
-        }
-
         resources {
           limits = {
             cpu    = "1000m"
@@ -58,7 +45,7 @@ resource "google_cloud_run_service" "default" {
 
   metadata {
     annotations = {
-      "client.knative.dev/user-image"     = local.docker_image_url
+      "client.knative.dev/user-image"     = var.docker_image_url
       "run.googleapis.com/ingress"        = "all"
       "run.googleapis.com/ingress-status" = "all"
     }
@@ -109,13 +96,4 @@ resource "google_dns_record_set" "resource_recordset" {
   type         = "CNAME"
   rrdatas      = ["ghs.googlehosted.com."]
   ttl          = 86400
-}
-
-data "google_client_config" "default" {
-
-}
-
-resource "google_service_account" "firebase_account" {
-  account_id   = "${var.service_id}-firebase"
-  display_name = "Service Account"
 }
