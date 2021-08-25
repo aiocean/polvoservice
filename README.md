@@ -1,45 +1,73 @@
+# Polvo Service
 
-# Module `./config/terraform`
+## Cài đặt
 
-Provider Requirements:
-* **docker (`kreuzwerker/docker`):** `2.11.0`
-* **google:** (any version)
-* **google-beta:** (any version)
+> Các command dưới này để được gọi trong Cloud Shell.
 
-## Input Variables
-* `env` (default `"develop"`): The environment
-* `project_name` (default `"aio-shopify-services"`): The project name
-* `region` (default `"asia-southeast1"`): The region
-* `service_base_domain` (default `"aiocean.services"`): Base do main for the service. It should be already exists
-* `service_name` (default `"polvo"`): The id of the service. Should be a single word
-
-## Output Values
-* `docker_image_url`
-* `service_address`
-
-## Managed Resources
-* `google_cloud_run_domain_mapping.default` from `google-beta`
-* `google_cloud_run_service.default` from `google-beta`
-* `google_cloud_run_service_iam_policy.noauth` from `google`
-* `google_dns_record_set.resource_recordset` from `google-beta`
-* `google_service_account.firebase_account` from `google`
-
-## Data Resources
-* `data.docker_registry_image.service_image` from `docker`
-* `data.google_client_config.default` from `google`
-* `data.google_iam_policy.noauth` from `google`
-
-## Test
+1. In Cloud Shell, create the Cloud Storage bucket:
 
 ```
-# Set env
-export ADDRESS=127.0.0.1:8080
-export K_REVISION=local
-export FIRESTORE_EMULATOR_HOST=localhost:8181
+PROJECT_ID=$(gcloud config get-value project)
+gsutil mb gs://${PROJECT_ID}-tfstate
+```
 
-# Start firebase emulator
-gcloud beta emulators firestore start --host-port=$FIRESTORE_EMULATOR_HOST
+2. Enable Object Versioning to keep the history of your deployments:
 
-# Start server
-go test ./internal/server -count=1
+```
+gsutil versioning set on gs://${PROJECT_ID}-tfstate
+```
+
+3. Cấp quyền cho account build
+
+```
+CLOUDBUILD_SA="$(gcloud projects describe $PROJECT_ID --format 'value(projectNumber)')@cloudbuild.gserviceaccount.com"
+gcloud projects add-iam-policy-binding $PROJECT_ID --member serviceAccount:$CLOUDBUILD_SA --role roles/editor
+gcloud projects add-iam-policy-binding $PROJECT_ID --member serviceAccount:$CLOUDBUILD_SA --role roles/run.admin
+```
+
+4. Tạo build trigger với substitution variables:
+
+```
+_ENV: main
+```
+
+`_ENV` này là môi trường đang build, nó sẽ quyết định sự khác biệt về resource.
+
+
+## Common Use Query
+
+### Delete all versions that do not have package
+
+```
+upsert {
+  query {
+     var(func: eq(dgraph.type, "Version")) @filter(NOT has(~versions)){
+     	versionUid as uid
+    }
+ }
+      
+  mutation {
+    delete {
+      uid(versionUid) * * .
+    }
+  }
+}
+```
+
+### Detach version
+
+```
+upsert {
+  query {
+     var(func: eq(dgraph.type, "Package")) @filter(eq(name,"sidebar")){
+     	packageUid as uid
+    }
+ }
+      
+  mutation {
+    delete {
+      uid(packageUid) <versions>  <0x6d> .
+    }
+  }
+}
 ```

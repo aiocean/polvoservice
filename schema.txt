@@ -1,59 +1,28 @@
-orn: string @index(fulltext) @upsert .
-display_name: string @index(fulltext) .
+name: string @index(exact) @upsert .
 maintainer: string .
-git_ref: string .
-entry_point_url: string .
+manifest_url: string .
+
 created_at: dateTime .
 updated_at: dateTime .
 deleted_at: dateTime .
-configs: [uid] @reverse .
-packages: [uid] @reverse .
+
 versions: [uid] @reverse .
-modules: [uid] @reverse .
-
-type Application {
-	orn
-	display_name
-	created_at
-	updated_at
-	deleted_at
-	configs
-	packages
-}
-
-type ApplicationConfig {
-    orn
-    display_name
-    created_at
-    updated_at
-    deleted_at
-}
 
 type Package {
-    orn
-    display_name
-    maintainer
-    created_at
-    updated_at
-    deleted_at
-    versions
+    name: string
+    maintainer: string
+    versions: [Version]
+
+    created_at: dateTime
+    updated_at: dateTime
+    deleted_at: dateTime
 }
 
 type Version {
-    orn
-    display_name
-    git_ref
-    entry_point_url
-    created_at
-    updated_at
-    deleted_at
-    modules
-}
+    name: string
+    manifest_url: string
 
-type Module {
-    orn
-    display_name
-    created_at
-    updated_at
-    deleted_at
+    created_at: dateTime
+    updated_at: dateTime
+    deleted_at: dateTime
 }

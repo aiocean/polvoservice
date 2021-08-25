@@ -5,7 +5,6 @@ WORKDIR /build
 COPY go.mod go.sum ./
 COPY internal/ ./internal
 COPY cmd/ ./cmd
-COPY pkg/ ./pkg
 
 ENV GOPRIVATE=pkg.aiocean.dev/*,github.com/aiocean/*
 RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o server ./cmd/server

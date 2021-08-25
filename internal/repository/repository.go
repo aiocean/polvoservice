@@ -6,50 +6,80 @@ import (
 	polvo_v1 "pkg.aiocean.dev/polvogo/aiocean/polvo/v1"
 )
 
+type ListVersionsOptions struct {
+	Limit *uint
+	OrderByWeight *bool
+}
+
 type Repository interface {
-	GetPackage(ctx context.Context, packageOrn string) (*polvo_v1.Package, error)
-	ListPackages(ctx context.Context, projectOrn string) ([]*polvo_v1.Package, error)
-	SetPackage(ctx context.Context, projectOrn string, updatedFields interface{}) (*polvo_v1.Package, error)
+	GetPackage(ctx context.Context, name string) (*polvo_v1.Package, error)
+	ListPackages(ctx context.Context) ([]*polvo_v1.Package, error)
+	CreatePackage(ctx context.Context, pkg *polvo_v1.Package) (*polvo_v1.Package, error)
+	UpdatePackage(ctx context.Context, name string, updatedFields map[string]interface{}) (*polvo_v1.Package, error)
+	DeletePackage(ctx context.Context, name string) error
+	IsPackageExists(ctx context.Context, name string) (bool, error)
 
-	ListVersions(ctx context.Context, packageOrn string) ([]*polvo_v1.Version, error)
-	SetVersion(ctx context.Context, packageOrn string, updatedFields interface{}) (*polvo_v1.Version, error)
-	GetVersion(ctx context.Context, versionOrn string) (*polvo_v1.Version, error)
-
-	GetApplication (ctx context.Context, applicationOrn string) (*polvo_v1.Application, error)
-	SetApplication (ctx context.Context, updatedFields interface{}) (*polvo_v1.Application, error)
+	ListVersions(ctx context.Context, pkdUid string, option ...ListVersionsOptions) ([]*polvo_v1.Version, error)
+	GetVersion(ctx context.Context, packageName, versionName string) (*polvo_v1.Version, error)
+	GetHeaviestVersion(ctx context.Context, packageName string) (*polvo_v1.Version, error)
+	CreateVersion(ctx context.Context, packageName string, version *polvo_v1.Version) (*polvo_v1.Version, error)
+	UpdateVersion(ctx context.Context, packageName, versionName string, updatedFields map[string]interface{}) (*polvo_v1.Version, error)
+	DeleteVersion(ctx context.Context, packageName, versionName string) error
+	IsVersionExists(ctx context.Context, packageName string, versionName string) (bool, error)
 }
 
 type UnimplementedRepository struct {
 }
 
-func (u UnimplementedRepository) GetPackage(ctx context.Context, packageOrn string) (*polvo_v1.Package, error) {
+func (u UnimplementedRepository) GetPackage(ctx context.Context, name string) (*polvo_v1.Package, error) {
 	panic("implement me")
 }
 
-func (u UnimplementedRepository) ListPackages(ctx context.Context, projectOrn string) ([]*polvo_v1.Package, error) {
+func (u UnimplementedRepository) ListPackages(ctx context.Context) ([]*polvo_v1.Package, error) {
 	panic("implement me")
 }
 
-func (u UnimplementedRepository) SetPackage(ctx context.Context, projectOrn string, updatedFields interface{}) (*polvo_v1.Package, error) {
+func (u UnimplementedRepository) CreatePackage(ctx context.Context, pkg *polvo_v1.Package) (*polvo_v1.Package, error) {
 	panic("implement me")
 }
 
-func (u UnimplementedRepository) ListVersions(ctx context.Context, packageOrn string) ([]*polvo_v1.Version, error) {
+func (u UnimplementedRepository) UpdatePackage(ctx context.Context, name string, updatedFields map[string]interface{}) (*polvo_v1.Package, error) {
 	panic("implement me")
 }
 
-func (u UnimplementedRepository) SetVersion(ctx context.Context, packageOrn string, updatedFields interface{}) (*polvo_v1.Version, error) {
+func (u UnimplementedRepository) DeletePackage(ctx context.Context, name string) error {
 	panic("implement me")
 }
 
-func (u UnimplementedRepository) GetVersion(ctx context.Context, versionOrn string) (*polvo_v1.Version, error) {
+func (u UnimplementedRepository) IsPackageExists(ctx context.Context, name string) (bool, error) {
 	panic("implement me")
 }
 
-func (u UnimplementedRepository) GetApplication(ctx context.Context, applicationOrn string) (*polvo_v1.Application, error) {
+func (u UnimplementedRepository) ListVersions(ctx context.Context, pkdUid string, option ...ListVersionsOptions) ([]*polvo_v1.Version, error) {
 	panic("implement me")
 }
 
-func (u UnimplementedRepository) SetApplication(ctx context.Context, updatedFields interface{}) (*polvo_v1.Application, error) {
+func (u UnimplementedRepository) GetVersion(ctx context.Context, packageName, versionName string) (*polvo_v1.Version, error) {
 	panic("implement me")
 }
+
+func (u UnimplementedRepository) GetHeaviestVersion(ctx context.Context, packageName string) (*polvo_v1.Version, error) {
+	panic("implement me")
+}
+
+func (u UnimplementedRepository) CreateVersion(ctx context.Context, packageName string, version *polvo_v1.Version) (*polvo_v1.Version, error) {
+	panic("implement me")
+}
+
+func (u UnimplementedRepository) UpdateVersion(ctx context.Context, packageName, versionName string, updatedFields map[string]interface{}) (*polvo_v1.Version, error) {
+	panic("implement me")
+}
+
+func (u UnimplementedRepository) DeleteVersion(ctx context.Context, packageName, versionName string) error {
+	panic("implement me")
+}
+
+func (u UnimplementedRepository) IsVersionExists(ctx context.Context, packageName string, versionName string) (bool, error) {
+	panic("implement me")
+}
+
