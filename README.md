@@ -8,13 +8,13 @@
 
 ```
 PROJECT_ID=$(gcloud config get-value project)
-gsutil mb gs://${PROJECT_ID}-tfstate
+gsutil mb gs://tfstate__${PROJECT_ID}
 ```
 
 2. Enable Object Versioning to keep the history of your deployments:
 
 ```
-gsutil versioning set on gs://${PROJECT_ID}-tfstate
+gsutil versioning set on gs://tfstate__${PROJECT_ID}
 ```
 
 3. Cấp quyền cho account build

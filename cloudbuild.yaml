@@ -12,7 +12,7 @@ steps:
     - '-c'
     - |
       cd infrastructure/terraform
-      terraform init -reconfigure -backend-config="bucket=$PROJECT_ID-tfstate" -backend-config="prefix=polvo-service/$_ENV"
+      terraform init -reconfigure -backend-config="bucket=tfstate__$PROJECT_ID" -backend-config="prefix=polvo-service/$_ENV"
   # plan
   - id: 'terraform:apply'
     name: 'hashicorp/terraform:1.0.5'
