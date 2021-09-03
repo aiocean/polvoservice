@@ -493,7 +493,7 @@ func (r *DgraphRepository) ListVersions(ctx context.Context, packageName string,
 {
   package(func: eq(dgraph.type, "Package")) @filter(eq(name,"` + packageName + `")) {
 	uid
-	versions (first: 10) {
+	versions @facets(orderdesc: weight, weight: weight) {
 		uid
 		name
 		manifest_url
