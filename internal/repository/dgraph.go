@@ -526,8 +526,9 @@ func (r *DgraphRepository) ListVersions(ctx context.Context, packageName string,
 
 	rawVersions.ForEach(func(key, value gjson.Result) bool {
 		version := &polvo_v1.Version{
-			Name: value.Get("name").String(),
+			Name:        value.Get("name").String(),
 			ManifestUrl: value.Get("manifest_url").String(),
+			Weight: uint32(value.Get("weight").Uint()),
 		}
 		versions = append(versions, version)
 

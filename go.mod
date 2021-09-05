@@ -4,10 +4,9 @@ go 1.16
 
 require (
 	github.com/dgraph-io/dgo/v210 v210.0.0-20210407152819-261d1c2a6987
-	github.com/golang/protobuf v1.5.2
 	github.com/google/wire v0.5.0
 	github.com/mennanov/fieldmask-utils v0.3.3
-	github.com/nguyenvanduocit/toCamelCase v0.1.1 // indirect
+	github.com/nguyenvanduocit/toCamelCase v0.1.1
 	github.com/nguyenvanduocit/toSnakeCase v0.0.1
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.0 // indirect
