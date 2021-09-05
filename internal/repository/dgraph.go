@@ -229,8 +229,7 @@ func (r *DgraphRepository) UpdateVersion(ctx context.Context, packageName, versi
 	}
 
 	if versionName, ok := updatedFields["Name"]; ok {
-		definePackageUid = "packageUid as uid\n"
-		updateNquads += `uid(versionUid) <name> ` + versionName.(string) + ` .`
+		updateNquads += "\n" + `uid(versionUid) <name> ` + versionName.(string) + ` .`
 	}
 
 	request := &api.Request{
