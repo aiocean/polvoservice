@@ -228,6 +228,11 @@ func (r *DgraphRepository) UpdateVersion(ctx context.Context, packageName, versi
 		updateNquads += `uid(packageUid) <versions> uid(versionUid) (weight=` + strconv.FormatInt(int64(weight.(uint32)), 10) + `) .`
 	}
 
+	if versionName, ok := updatedFields["Name"]; ok {
+		definePackageUid = "packageUid as uid\n"
+		updateNquads += `uid(versionUid) <name> ` + versionName.(string) + ` .`
+	}
+
 	request := &api.Request{
 		Query:      `{
 						var(func: eq(name, ` + packageName + `)) @filter(eq(dgraph.type, "Package")) {`+
