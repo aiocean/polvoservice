@@ -289,7 +289,7 @@ func (r *DgraphRepository) CreateVersion(ctx context.Context, packageName string
 									_:version <name> "` + version.GetName() + `" .
 									_:version <manifest_url> "` + version.GetManifestUrl() + `" .
 									_:version <created_at> "` + time.Now().Format(time.RFC3339) + `" .
-									uid(packageUid) <versions> _:version (weight=0) .`,
+									uid(packageUid) <versions> _:version (weight=` + strconv.FormatInt(int64(version.Weight), 10) + `) .`,
 							),
 				Cond:       "@if(eq(len(versionUid), 0) AND eq(len(packageUid), 1))",
 			},
