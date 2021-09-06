@@ -118,8 +118,9 @@ func (r *DgraphRepository) GetVersion(ctx context.Context, packageName, versionN
 	}
 
 	pkg := &polvo_v1.Version{
-		Name:       items.Get("name").String(),
+		Name:        items.Get("name").String(),
 		ManifestUrl: items.Get("manifest_url").String(),
+		Weight: uint32(items.Get("weight").Uint()),
 	}
 
 	return pkg, nil
