@@ -88,7 +88,7 @@ func (r *DgraphRepository) GetVersion(ctx context.Context, packageName, versionN
 
 	query := `{
 		  package(func: eq(name, "` + packageName + `")) @filter(eq(dgraph.type, "Package")){
-			versions @filter(eq(name, "` + versionName + `")) {
+			versions @filter(eq(name, "` + versionName + `")) @facets(weight: weight) {
 				uid
 				name
 				manifest_url
